@@ -6,10 +6,13 @@ import HowItWorks from "@/components/HowItWorks";
 import ProductSpecs from "@/components/ProductSpecs";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Index = () => {
+  const { theme } = useTheme();
+  
   return (
-    <div className="min-h-screen bg-white dark:bg-rapto-primary">
+    <div className={`min-h-screen ${theme === "dark" ? "dark" : ""} bg-white dark:bg-rapto-primary`}>
       <Navbar />
       <main>
         <Hero3D />

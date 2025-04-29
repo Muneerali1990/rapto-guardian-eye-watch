@@ -2,9 +2,12 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Shield, Navigation, Camera, AlertTriangle } from "lucide-react";
+import PreOrderModal from './PreOrderModal';
+import { toast } from '@/components/ui/sonner';
 
 const Hero3D = () => {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [isPreOrderOpen, setIsPreOrderOpen] = useState(false);
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -16,6 +19,17 @@ const Hero3D = () => {
     setRotation({
       x: (y - centerY) / 20,
       y: (x - centerX) / 20,
+    });
+  };
+  
+  const handleLearnMore = () => {
+    const featuresSection = document.getElementById('features');
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    toast.info("Discover Rapto Shield", {
+      description: "Explore our advanced security features for your bike.",
     });
   };
 
@@ -38,14 +52,22 @@ const Hero3D = () => {
           </p>
           
           <div className="flex flex-wrap gap-4">
-            <Button className="bg-gradient-to-r from-rapto-accent to-rapto-highlight text-white px-8 py-6 rounded-xl hover:shadow-glow transition-all text-lg">
+            <Button 
+              className="bg-gradient-to-r from-rapto-accent to-rapto-highlight text-white px-8 py-6 rounded-xl hover:shadow-glow transition-all text-lg"
+              onClick={() => setIsPreOrderOpen(true)}
+            >
               Pre-order Now
             </Button>
-            <Button variant="outline" className="border-rapto-highlight text-rapto-highlight hover:bg-rapto-highlight/10 px-8 py-6 rounded-xl text-lg">
+            <Button 
+              variant="outline" 
+              className="border-rapto-highlight text-rapto-highlight hover:bg-rapto-highlight/10 px-8 py-6 rounded-xl text-lg"
+              onClick={handleLearnMore}
+            >
               Learn More
             </Button>
           </div>
           
+          {/* Feature icons */}
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 rounded-full bg-rapto-light dark:bg-rapto-primary flex items-center justify-center mb-2">
@@ -127,6 +149,12 @@ const Hero3D = () => {
           </div>
         </div>
       </div>
+      
+      {/* Pre-order Modal */}
+      <PreOrderModal 
+        isOpen={isPreOrderOpen} 
+        onClose={() => setIsPreOrderOpen(false)} 
+      />
     </section>
   );
 };
