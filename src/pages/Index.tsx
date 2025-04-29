@@ -1,9 +1,9 @@
 
-import Hero3D from "@/components/Hero3D";
+import Enhanced3DHero from "@/components/Enhanced3DHero";
 import Navbar from "@/components/Navbar";
 import FeatureSection from "@/components/FeatureSection";
-import HowItWorks from "@/components/HowItWorks";
-import ProductSpecs from "@/components/ProductSpecs";
+import EnhancedHowItWorks from "@/components/EnhancedHowItWorks";
+import Enhanced3DProductSpecs from "@/components/Enhanced3DProductSpecs";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -15,10 +15,10 @@ const Index = () => {
     <div className={`min-h-screen ${theme === "dark" ? "dark" : ""} bg-white dark:bg-rapto-primary`}>
       <Navbar />
       <main>
-        <Hero3D />
+        <Enhanced3DHero />
         <FeatureSection />
-        <HowItWorks />
-        <ProductSpecs />
+        <EnhancedHowItWorks />
+        <Enhanced3DProductSpecs />
         <ContactSection />
       </main>
       <Footer />
