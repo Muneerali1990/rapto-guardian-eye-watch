@@ -54,9 +54,9 @@ const ContactSection = () => {
               <div className="md:w-1/2">
                 <h3 className="text-xl font-bold mb-4">Pre-order Price</h3>
                 <div className="flex items-end mb-4">
-                  <span className="text-4xl font-bold">$129</span>
-                  <span className="text-xl line-through text-gray-400 ml-3">$159</span>
-                  <span className="ml-2 bg-rapto-highlight/20 text-rapto-highlight py-0.5 px-2 rounded text-sm">SAVE 20%</span>
+                  <span className="text-4xl font-bold">$70</span>
+                  <span className="text-xl line-through text-gray-400 ml-3">$100</span>
+                  <span className="ml-2 bg-rapto-highlight/20 text-rapto-highlight py-0.5 px-2 rounded text-sm">SAVE 30%</span>
                 </div>
                 <p className="text-gray-300 mb-6">Limited-time offer. Pre-order now to secure your discount.</p>
                 <Button className="w-full bg-gradient-to-r from-rapto-accent to-rapto-highlight text-white px-8 py-6 rounded-xl hover:shadow-glow transition-all text-lg">
