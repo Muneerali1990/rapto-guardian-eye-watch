@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from 'react';
+import { UserButton, useUser, SignUpButton, useClerk } from '@clerk/clerk-react';
 import { Button } from "@/components/ui/button";
-import { Shield, Menu, X, Sun, Moon } from "lucide-react";
+import { Shield, Menu, X, Sun, Moon, Bike, ShieldPlus } from "lucide-react";
 import { useTheme } from '@/contexts/ThemeContext';
 import { Toggle } from "@/components/ui/toggle";
 import { toast } from '@/components/ui/sonner';
@@ -9,17 +9,15 @@ import { toast } from '@/components/ui/sonner';
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showRolePopup, setShowRolePopup] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { isSignedIn } = useUser();
+  const clerk = useClerk();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -27,6 +25,13 @@ const Navbar = () => {
   const handlePreOrder = () => {
     toast.success("Pre-order request submitted", {
       description: "We'll notify you when Rapto Shield is available for purchase."
+    });
+  };
+
+  const handleRoleSelect = (role: 'user' | 'insurer') => {
+    setShowRolePopup(false);
+    clerk.openSignIn({
+      redirectUrl: role === 'user' ? '/dashboard' : '/insurance-dashboard'
     });
   };
 
@@ -56,7 +61,24 @@ const Navbar = () => {
           </Toggle>
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-4">
+          {isSignedIn ? (
+            <UserButton afterSignOutUrl="/" />
+          ) : (
+            <>
+              <Button 
+                variant="ghost"
+                onClick={() => setShowRolePopup(true)}
+              >
+                Sign In
+              </Button>
+              <SignUpButton mode="modal">
+                <Button className="bg-gradient-to-r from-rapto-accent to-rapto-highlight text-white hover:shadow-glow transition-all">
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </>
+          )}
           <Button 
             className="bg-gradient-to-r from-rapto-accent to-rapto-highlight text-white hover:shadow-glow transition-all"
             onClick={handlePreOrder}
@@ -91,6 +113,34 @@ const Navbar = () => {
           <a href="#how-it-works" className="font-medium hover:text-rapto-highlight transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>How It Works</a>
           <a href="#specs" className="font-medium hover:text-rapto-highlight transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>Specs</a>
           <a href="#contact" className="font-medium hover:text-rapto-highlight transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+          
+          {!isSignedIn ? (
+            <>
+              <Button 
+                variant="ghost" 
+                className="w-full"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setShowRolePopup(true);
+                }}
+              >
+                Sign In
+              </Button>
+              <SignUpButton mode="modal">
+                <Button 
+                  className="bg-gradient-to-r from-rapto-accent to-rapto-highlight text-white w-full"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </>
+          ) : (
+            <div className="w-full flex justify-center">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          )}
+          
           <Button 
             className="bg-gradient-to-r from-rapto-accent to-rapto-highlight text-white w-full"
             onClick={() => {
@@ -100,6 +150,43 @@ const Navbar = () => {
           >
             Pre-order Now
           </Button>
+        </div>
+      )}
+
+      {/* Role Selection Popup */}
+      {showRolePopup && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-rapto-primary rounded-2xl p-8 w-full max-w-md space-y-6 shadow-xl animate-in fade-in-zoom-in">
+            <h2 className="text-2xl font-bold text-center">Welcome to Rapto Shield</h2>
+            <p className="text-muted-foreground text-center">Please select your role</p>
+            <div className="flex flex-col gap-4">
+              <Button
+                onClick={() => handleRoleSelect('user')}
+                className="h-16 text-lg bg-gradient-to-r from-rapto-accent to-rapto-highlight hover:from-rapto-accent/90 hover:to-rapto-highlight/90 text-white rounded-xl transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <Bike className="h-6 w-6 transition-transform group-hover:scale-110" />
+                  <span>Bike Owner</span>
+                </div>
+              </Button>
+              <Button
+                onClick={() => handleRoleSelect('insurer')}
+                className="h-16 text-lg bg-gradient-to-r from-rapto-secondary to-rapto-primary hover:from-rapto-secondary/90 hover:to-rapto-primary/90 text-white rounded-xl transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <ShieldPlus className="h-6 w-6 transition-transform group-hover:scale-110" />
+                  <span>Insurance Provider</span>
+                </div>
+              </Button>
+            </div>
+            <Button
+              variant="ghost"
+              onClick={() => setShowRolePopup(false)}
+              className="w-full mt-4"
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       )}
     </nav>
